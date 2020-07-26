@@ -1,4 +1,4 @@
-package com.geeksforgeeks.myfirstkotlinapp
+package com.example.minitronome
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
