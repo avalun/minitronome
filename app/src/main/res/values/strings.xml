@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Minitronome</string>
+    <string name="stop">Stop</string>
+    <string name="start">Start</string>
+
+
+
 </resources>
