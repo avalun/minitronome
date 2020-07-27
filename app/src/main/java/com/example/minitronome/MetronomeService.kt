@@ -2,6 +2,8 @@ package com.example.minitronome
 
 import android.app.Service
 import android.content.Intent
+import android.media.AudioAttributes
+import android.media.SoundPool
 import android.os.Binder
 import android.os.CountDownTimer
 import android.os.IBinder
@@ -13,15 +15,30 @@ class MetronomeService: Service() {
     private var interval = 500L
 
     private lateinit var timer: CountDownTimer
-
+    private lateinit var soundPool: SoundPool
     private lateinit var tickListener : TickListener
 
-    val binder: IBinder = LocalBinder()
+    var soundId = 0
+
+    private val binder: IBinder = LocalBinder()
 
     override fun onCreate() {
-        super.onCreate()
+        // Create soundPool to playback audio
+        soundPool = SoundPool.Builder()
+            .setMaxStreams(1)
+            .setAudioAttributes(AudioAttributes.Builder()
+                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                .build())
+            .build();
 
+        soundId = soundPool.load(this, R.raw.wood_csharp, 1)
         setBpm(120)
+        super.onCreate()
+    }
+
+    override fun onDestroy() {
+        soundPool.release()
+        super.onDestroy()
     }
 
     private fun toInterval(bpm: Int): Long {
@@ -39,8 +56,16 @@ class MetronomeService: Service() {
         // Maybe using a handler with post would be better for subdivisions
         // Would have to make this class runnable and post the run via a handler
         timer = object : CountDownTimer(interval, 1) {
+            var tickCounter = 0
             override fun onTick(millisUntilFinished: Long) {
-                // Animation and stuff
+                if(tickCounter > 9) {
+                    // Animation and stuff
+                    val progress = (1f - (millisUntilFinished / interval)) * 100f
+                    tickListener.onProgress(progress)
+                    tickCounter = 0
+                } else {
+                    tickCounter++
+                }
             }
 
             override fun onFinish() {
@@ -53,8 +78,9 @@ class MetronomeService: Service() {
     }
 
     fun tick() {
-        Log.d("Metronome", "Tick")
         timer.start()
+        Log.d("Metronome", "Tick")
+        soundPool.play(soundId, 1f, 1f, 0, 0, 1f)
 
         if (::tickListener.isInitialized)
             tickListener.onTick()
@@ -86,6 +112,7 @@ class MetronomeService: Service() {
     interface TickListener {
         fun onTick()
         fun onBpmChanged(bpm: Int)
+        fun onProgress(progress: Float)
         fun onStartTicks()
         fun onStopTicks()
     }

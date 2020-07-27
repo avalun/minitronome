@@ -41,8 +41,10 @@ class MainActivity : AppCompatActivity(), MetronomeService.TickListener {
         {
             fun setStop() = if (button.text == "Start") {
                 button.setText("Stop")
+                mService.startTimer()
             }else{
                 button.setText("Start")
+                mService.stopTimer()
             }
 
             setStop()
@@ -74,6 +76,10 @@ class MainActivity : AppCompatActivity(), MetronomeService.TickListener {
 
     override fun onBpmChanged(bpm: Int) {
         // TODO("Not yet implemented")
+    }
+
+    override fun onProgress(progress: Float) {
+        // get progress here and pass it to the layout animation thing
     }
 
     override fun onStartTicks() {
