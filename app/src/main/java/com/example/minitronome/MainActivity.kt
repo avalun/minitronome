@@ -6,7 +6,9 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
+import android.view.Menu
 import android.widget.Button
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
@@ -50,6 +52,12 @@ class MainActivity : AppCompatActivity(), MetronomeService.TickListener {
             setStop()
             Toast.makeText(this@MainActivity,"Button 1 clicked", Toast.LENGTH_LONG).show()
         }
+        // findViewById<ProgressBar>(R.id.progress).progress
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.app_bar_settings,menu)
+        return true
     }
 
     override fun onStart() {
@@ -89,4 +97,5 @@ class MainActivity : AppCompatActivity(), MetronomeService.TickListener {
     override fun onStopTicks() {
         // TODO("Not yet implemented")
     }
+
 }
