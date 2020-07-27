@@ -2,6 +2,7 @@ package com.example.minitronome
 
 import android.app.Service
 import android.content.Intent
+import android.os.Binder
 import android.os.CountDownTimer
 import android.os.IBinder
 import android.util.Log
@@ -15,9 +16,7 @@ class MetronomeService: Service() {
 
     private lateinit var tickListener : TickListener
 
-    override fun onBind(intent: Intent?): IBinder? {
-        return null
-    }
+    val binder: IBinder = LocalBinder()
 
     override fun onCreate() {
         super.onCreate()
@@ -80,10 +79,19 @@ class MetronomeService: Service() {
         this.tickListener = listener
     }
 
+    override fun onBind(intent: Intent?): IBinder? {
+        return binder
+    }
+
     interface TickListener {
         fun onTick()
         fun onBpmChanged(bpm: Int)
         fun onStartTicks()
         fun onStopTicks()
+    }
+
+    inner class LocalBinder : Binder() {
+        // Return this instance of LocalService so clients can call public methods
+        fun getService(): MetronomeService = this@MetronomeService
     }
 }
