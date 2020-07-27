@@ -32,7 +32,7 @@ class MetronomeService: Service() {
             .build();
 
         soundId = soundPool.load(this, R.raw.wood_csharp, 1)
-        setBpm(120)
+        setBpm(10)
         super.onCreate()
     }
 
@@ -60,7 +60,7 @@ class MetronomeService: Service() {
             override fun onTick(millisUntilFinished: Long) {
                 if(tickCounter > 9) {
                     // Animation and stuff
-                    val progress = (1f - (millisUntilFinished / interval)) * 100f
+                    val progress = (1f - (millisUntilFinished / interval.toFloat())) * 100f
                     tickListener.onProgress(progress)
                     tickCounter = 0
                 } else {

@@ -11,6 +11,7 @@ import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity(), MetronomeService.TickListener {
 
@@ -52,7 +53,6 @@ class MainActivity : AppCompatActivity(), MetronomeService.TickListener {
             setStop()
             Toast.makeText(this@MainActivity,"Button 1 clicked", Toast.LENGTH_LONG).show()
         }
-        // findViewById<ProgressBar>(R.id.progress).progress
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -87,7 +87,7 @@ class MainActivity : AppCompatActivity(), MetronomeService.TickListener {
     }
 
     override fun onProgress(progress: Float) {
-        // get progress here and pass it to the layout animation thing
+        findViewById<ProgressBar>(R.id.progress).progress = progress.roundToInt()
     }
 
     override fun onStartTicks() {
